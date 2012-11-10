@@ -10,7 +10,7 @@ namespace Seabites.Naughty.Security {
     RoleGroup(RoleGroupId id)
       : base(id) {
       Register<AddedRoleGroup>(Apply);
-      Register<ArchivedRole>(Apply);
+      Register<ArchivedRoleGroup>(Apply);
       Register<AddedRoleToRoleGroup>(Apply);
       Register<RemovedRoleFromRoleGroup>(Apply);
     }
@@ -64,7 +64,7 @@ namespace Seabites.Naughty.Security {
       _archived = false;
     }
 
-    void Apply(ArchivedRole @event) {
+    void Apply(ArchivedRoleGroup @event) {
       _archived = true;
       _roles.Clear();
     }
