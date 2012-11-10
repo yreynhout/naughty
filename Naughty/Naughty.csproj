@@ -1,0 +1,106 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{CDB96DAE-ADDA-43C3-A2C5-69266584621F}</ProjectGuid>
+    <OutputType>Exe</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Seabites.Naughty</RootNamespace>
+    <AssemblyName>Seabites.Naughty</AssemblyName>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="AddUserAccountHandler.cs" />
+    <Compile Include="Infrastructure\AggregateRootEntity.cs" />
+    <Compile Include="Infrastructure\CompositeHandler.cs" />
+    <Compile Include="Infrastructure\EventStream.cs" />
+    <Compile Include="Infrastructure\EventStreamReader.cs" />
+    <Compile Include="Infrastructure\HandlerAdapter.cs" />
+    <Compile Include="Infrastructure\IAggregateChangeTracker.cs" />
+    <Compile Include="Infrastructure\IAggregateIdentity.cs" />
+    <Compile Include="Infrastructure\IAggregateInitializer.cs" />
+    <Compile Include="Infrastructure\IAggregateRootEntity.cs" />
+    <Compile Include="Infrastructure\IEventStreamReader.cs" />
+    <Compile Include="Infrastructure\IHandle.cs" />
+    <Compile Include="Infrastructure\IRepository.cs" />
+    <Compile Include="Infrastructure\IUnitOfWork.cs" />
+    <Compile Include="Infrastructure\Repository.cs" />
+    <Compile Include="Infrastructure\UnitOfWork.cs" />
+    <Compile Include="IPermissionResolver.cs" />
+    <Compile Include="Messaging\AddedPermissionToRole.cs" />
+    <Compile Include="Messaging\AddedRole.cs" />
+    <Compile Include="Messaging\AddedRoleGroup.cs" />
+    <Compile Include="Messaging\AddedRoleToRoleGroup.cs" />
+    <Compile Include="Messaging\AddedUserAccount.cs" />
+    <Compile Include="Messaging\AddUserAccount.cs" />
+    <Compile Include="Messaging\RemovedPermissionFromRole.cs" />
+    <Compile Include="Messaging\ArchivedRole.cs" />
+    <Compile Include="Messaging\RemovedRoleFromRoleGroup.cs" />
+    <Compile Include="Messaging\ArchivedRoleGroup.cs" />
+    <Compile Include="Messaging\DisabledUserAccount.cs" />
+    <Compile Include="Messaging\RoleGrantedToUserAccount.cs" />
+    <Compile Include="Messaging\RoleGroupGrantedToUserAccount.cs" />
+    <Compile Include="Messaging\RoleGroupRevokedFromUserAccount.cs" />
+    <Compile Include="Messaging\RolePermissionAllowed.cs" />
+    <Compile Include="Messaging\RolePermissionDenied.cs" />
+    <Compile Include="Messaging\RoleRevokedFromUserAccount.cs" />
+    <Compile Include="PermissionResolver.cs" />
+    <Compile Include="Program.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SecurityContext.cs" />
+    <Compile Include="SecurityContextAwareHandler.cs" />
+    <Compile Include="Security\AccessDecider.cs" />
+    <Compile Include="Security\AccessDecision.cs" />
+    <Compile Include="Security\AccessDecisionCombinator.cs" />
+    <Compile Include="Security\IAccessDecider.cs" />
+    <Compile Include="Security\SecurityPermissions.cs" />
+    <Compile Include="Security\IAccessDecisionCombinator.cs" />
+    <Compile Include="Security\Metadata.cs" />
+    <Compile Include="Security\Name.cs" />
+    <Compile Include="Security\PermissionId.cs" />
+    <Compile Include="Security\Role.cs" />
+    <Compile Include="Security\RoleGroup.cs" />
+    <Compile Include="Security\RoleGroupId.cs" />
+    <Compile Include="Security\RoleId.cs" />
+    <Compile Include="Security\UserAccount.cs" />
+    <Compile Include="Security\UserAccountId.cs" />
+    <Compile Include="Security\UserAccountName.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="App.config" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>
