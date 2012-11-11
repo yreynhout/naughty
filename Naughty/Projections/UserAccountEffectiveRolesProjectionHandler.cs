@@ -13,12 +13,14 @@ namespace Seabites.Naughty.Projections {
     IHandle<RemovedRoleFromRoleGroup> {
     readonly IObserver<ISqlStatement> _observer;
     readonly ILookupRolesOfRoleGroup _lookup;
+    readonly Random _random;
 
     public UserAccountEffectiveRolesProjectionHandler(IObserver<ISqlStatement> observer, ILookupRolesOfRoleGroup lookup) {
       if (observer == null) throw new ArgumentNullException("observer");
       if (lookup == null) throw new ArgumentNullException("lookup");
       _observer = observer;
       _lookup = lookup;
+      _random = new Random();
     }
 
     public void Handle(DisabledUserAccount message) {
@@ -67,18 +69,25 @@ namespace Seabites.Naughty.Projections {
     }
 
     public void Handle(AddedRoleToRoleGroup message) {
-      // this sp would apply the change to all user accounts that have the marker row for the given role group
+      var tempTableName = "#AffectedUserAccounts" + _random.Next();
       _observer.OnNext(
-        new SqlStoredProcedureStatement(
-          "useraccounteffectiveroles_added_role_to_rolegroup",
-          new { RoleGroupId = message.RoleGroupId, RoleId = message.RoleId }));
+        new SqlTextStatement(
+          string.Format(
+          "CREATE TABLE {0} (UserAccountId UNIQUEIDENTIFIER) " + Environment.NewLine +
+          "INSERT INTO {0} " + Environment.NewLine +
+          "SELECT UserAccountId FROM UserAccountEffectiveRoles WHERE RoleGroupId = @RoleGroupId " + Environment.NewLine +
+          "INSERT INTO UserAccountEffectiveRoles (UserAccountId, RoleGroupId, RoleId) " + Environment.NewLine +
+          "SELECT UserAccountId, @RoleGroupId, @RoleId FROM {0} " + Environment.NewLine +
+          "DROP TABLE {0}",
+          tempTableName
+          ),
+          new {RoleGroupId = message.RoleGroupId, RoleId = message.RoleId}));
     }
 
     public void Handle(RemovedRoleFromRoleGroup message) {
-      // this sp would apply the change to all user accounts that have the marker row for the given role group
       _observer.OnNext(
-        new SqlStoredProcedureStatement(
-          "useraccounteffectiveroles_removed_role_from_rolegroup",
+        new SqlTextStatement(
+          "DELETE FROM UserAccountEffectiveRoles WHERE RoleGroupId = @RoleGroupId AND RoleId = @RoleId",
           new { RoleGroupId = message.RoleGroupId, RoleId = message.RoleId }));
     }
   }
