@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Seabites.Naughty.Security {
   public class AccessDecider : IAccessDecider {
@@ -8,6 +9,10 @@ namespace Seabites.Naughty.Security {
     public AccessDecider(Dictionary<PermissionId, AccessDecision> decisions) {
       if (decisions == null) throw new ArgumentNullException("decisions");
       _decisions = decisions;
+    }
+
+    public bool AreAllAllowed(IEnumerable<PermissionId> permissionIds) {
+      return permissionIds.All(IsAllowed);
     }
 
     public bool IsAllowed(PermissionId permissionId) {

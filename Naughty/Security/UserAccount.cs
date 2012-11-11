@@ -47,7 +47,7 @@ namespace Seabites.Naughty.Security {
     public void Disable() {
       if (!_disabled)
         ApplyEvent(
-          new ArchivedRole(Id));
+          new DisabledUserAccount(Id));
     }
 
     public void CombineDecisions(IAccessDecisionCombinator combinator, IRepository<Role> roleRepository, IRepository<RoleGroup> roleGroupRepository) {

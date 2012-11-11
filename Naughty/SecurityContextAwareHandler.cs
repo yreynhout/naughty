@@ -30,7 +30,7 @@ namespace Seabites.Naughty {
 
     public void Handle(SecurityContext<TMessage> context) {
       var decider = GetDeciderForUserAccount(context.UserAccountId);
-      if(!decider.IsAllowed(_resolver.ResolvePermission(context.Message))) {
+      if(!decider.AreAllAllowed(_resolver.ResolvePermission(context.Message))) {
         throw new SecurityException(string.Format("Yo bro, u do not have permission to do {0}", context.Message.GetType()));
       }
       _handler.Handle(context.Message);

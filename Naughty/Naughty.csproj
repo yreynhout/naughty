@@ -49,8 +49,12 @@
     <Compile Include="Infrastructure\IEventStreamReader.cs" />
     <Compile Include="Infrastructure\IHandle.cs" />
     <Compile Include="Infrastructure\IRepository.cs" />
+    <Compile Include="Infrastructure\ISqlStatement.cs" />
     <Compile Include="Infrastructure\IUnitOfWork.cs" />
     <Compile Include="Infrastructure\Repository.cs" />
+    <Compile Include="Infrastructure\SqlStatementObserver.cs" />
+    <Compile Include="Infrastructure\SqlStoredProcedureStatement.cs" />
+    <Compile Include="Infrastructure\SqlTextStatement.cs" />
     <Compile Include="Infrastructure\UnitOfWork.cs" />
     <Compile Include="IPermissionResolver.cs" />
     <Compile Include="Messaging\AddedPermissionToRole.cs" />
@@ -72,6 +76,9 @@
     <Compile Include="Messaging\RoleRevokedFromUserAccount.cs" />
     <Compile Include="PermissionResolver.cs" />
     <Compile Include="Program.cs" />
+    <Compile Include="Projections\ILookupRolesOfRoleGroup.cs" />
+    <Compile Include="Projections\MemoryRoleGroupLookup.cs" />
+    <Compile Include="Projections\UserAccountEffectiveRolesProjectionHandler.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SecurityContext.cs" />
     <Compile Include="SecurityContextAwareHandler.cs" />
