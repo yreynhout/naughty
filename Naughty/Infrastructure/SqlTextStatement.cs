@@ -1,4 +1,4 @@
-using System.IO;
+using System.Data;
 
 namespace Seabites.Naughty.Infrastructure {
   public class SqlTextStatement : ISqlStatement {
@@ -10,8 +10,8 @@ namespace Seabites.Naughty.Infrastructure {
       _parameters = parameters;
     }
 
-    public void WriteSql(TextWriter writer) {
-      writer.WriteLine(_text);
-    }
+    public string Text { get { return _text; } }
+    public object Parameters { get { return _parameters; } }
+    public CommandType CommandType { get { return CommandType.StoredProcedure; } }
   }
 }

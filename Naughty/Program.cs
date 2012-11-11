@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.SqlClient;
 using Seabites.Naughty.Infrastructure;
 using Seabites.Naughty.Messaging;
 using Seabites.Naughty.Projections;
@@ -22,10 +23,26 @@ namespace Seabites.Naughty {
       administratorRole.AddPermissions(SecurityPermissions.All);
       administratorRole.AllowPermissions(SecurityPermissions.All);
       roleRepository.Add(administratorRole);
-      
+      var subRole1Id = new RoleId(Guid.NewGuid());
+      var subRole1 = new Role(subRole1Id, new Name("SubRole1"));
+      subRole1.AddPermission(SecurityPermissions.AddRole);
+      subRole1.DenyPermission(SecurityPermissions.AddRole);
+      roleRepository.Add(subRole1);
+      var subRole2Id = new RoleId(Guid.NewGuid());
+      var subRole2 = new Role(subRole2Id, new Name("SubRole2"));
+      subRole2.AddPermission(SecurityPermissions.AddRole);
+      subRole2.AllowPermission(SecurityPermissions.AddRole);
+      roleRepository.Add(subRole2);
+      var group1Id = new RoleGroupId(Guid.NewGuid());
+      var group1 = new RoleGroup(group1Id, new Name("SubRole 1 & 2"));
+      group1.AddRole(subRole1Id);
+      group1.AddRole(subRole2Id);
+      roleGroupRepository.Add(group1);
+
       var administratorId = new UserAccountId(Guid.NewGuid());
       var administrator = new UserAccount(administratorId, new UserAccountName("Administrator"));
       administrator.GrantRole(administratorRoleId);
+      administrator.GrantRoleGroup(group1Id);
       userAccountRepository.Add(administrator);
 
       // Using security - in domain layer code
@@ -67,9 +84,10 @@ namespace Seabites.Naughty {
         compositeProjectionHandler.Handle(change);
       }
 
-      foreach(var statement in observer.Statements) {
-        statement.WriteSql(Console.Out);
-      }
+      new BatchedSqlStatementFlusher(
+        new SqlConnectionStringBuilder("Data Source=.\\SQLEXPRESS;Initial Catalog=<YourStoreHere>;Integrated Security=SSPI;")).
+        Flush(observer.Statements);
+
       Console.ReadLine();
     }
   }

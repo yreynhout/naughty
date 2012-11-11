@@ -34,6 +34,7 @@
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Data" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AddUserAccountHandler.cs" />
@@ -52,6 +53,8 @@
     <Compile Include="Infrastructure\ISqlStatement.cs" />
     <Compile Include="Infrastructure\IUnitOfWork.cs" />
     <Compile Include="Infrastructure\Repository.cs" />
+    <Compile Include="Infrastructure\SqlStatementBatchWriter.cs" />
+    <Compile Include="Infrastructure\BatchedSqlStatementFlusher.cs" />
     <Compile Include="Infrastructure\SqlStatementObserver.cs" />
     <Compile Include="Infrastructure\SqlStoredProcedureStatement.cs" />
     <Compile Include="Infrastructure\SqlTextStatement.cs" />

@@ -1,7 +1,9 @@
-using System.IO;
+using System.Data;
 
 namespace Seabites.Naughty.Infrastructure {
   public interface ISqlStatement {
-    void WriteSql(TextWriter writer);
+    string Text { get; }
+    object Parameters { get; }
+    CommandType CommandType { get; }
   }
 }
