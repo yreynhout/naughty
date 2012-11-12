@@ -17,7 +17,7 @@ namespace Seabites.Naughty.Security {
 
     public bool IsAllowed(PermissionId permissionId) {
       AccessDecision decision;
-      if(_decisions.TryGetValue(permissionId, out decision)) {
+      if (_decisions.TryGetValue(permissionId, out decision)) {
         return decision == AccessDecision.Allow;
       }
       return false;

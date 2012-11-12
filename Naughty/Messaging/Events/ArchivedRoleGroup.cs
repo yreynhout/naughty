@@ -1,6 +1,6 @@
 using System;
 
-namespace Seabites.Naughty.Messaging {
+namespace Seabites.Naughty.Messaging.Events {
   public class ArchivedRoleGroup {
     public readonly Guid RoleGroupId;
 

@@ -1,10 +1,11 @@
 using System;
 
-namespace Seabites.Naughty.Messaging {
-  public class AddedRoleToRoleGroup {
+namespace Seabites.Naughty.Messaging.Commands {
+  public class AddRoleToRoleGroup {
     public readonly Guid RoleGroupId;
     public readonly Guid RoleId;
-    public AddedRoleToRoleGroup(Guid roleGroupId, Guid roleId) {
+
+    public AddRoleToRoleGroup(Guid roleGroupId, Guid roleId) {
       RoleGroupId = roleGroupId;
       RoleId = roleId;
     }

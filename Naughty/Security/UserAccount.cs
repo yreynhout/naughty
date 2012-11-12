@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 using Seabites.Naughty.Infrastructure;
-using Seabites.Naughty.Messaging;
+using Seabites.Naughty.Messaging.Events;
 
 namespace Seabites.Naughty.Security {
   public class UserAccount : AggregateRootEntity<UserAccountId> {
@@ -24,24 +24,28 @@ namespace Seabites.Naughty.Security {
         new AddedUserAccount(userAccountId, name));
     }
 
-    public void GrantRole(RoleId roleId) {
+    public void GrantRole(Role role) {
+      ThrowIfDisabled();
       ApplyEvent(
-        new RoleGrantedToUserAccount(Id, roleId));
+        new RoleGrantedToUserAccount(Id, role.Id));
     }
 
-    public void GrantRoleGroup(RoleGroupId roleGroupId) {
+    public void GrantRoleGroup(RoleGroup roleGroup) {
+      ThrowIfDisabled();
       ApplyEvent(
-        new RoleGroupGrantedToUserAccount(Id, roleGroupId));
+        new RoleGroupGrantedToUserAccount(Id, roleGroup.Id));
     }
 
-    public void RevokeRole(RoleId roleId) {
+    public void RevokeRole(Role role) {
+      ThrowIfDisabled();
       ApplyEvent(
-        new RoleRevokedFromUserAccount(Id, roleId));
+        new RoleRevokedFromUserAccount(Id, role.Id));
     }
 
-    public void RevokeRoleGroup(RoleGroupId roleGroupId) {
+    public void RevokeRoleGroup(RoleGroup roleGroup) {
+      ThrowIfDisabled();
       ApplyEvent(
-        new RoleGroupRevokedFromUserAccount(Id, roleGroupId));
+        new RoleGroupRevokedFromUserAccount(Id, roleGroup.Id));
     }
 
     public void Disable() {
@@ -50,7 +54,8 @@ namespace Seabites.Naughty.Security {
           new DisabledUserAccount(Id));
     }
 
-    public void CombineDecisions(IAccessDecisionCombinator combinator, IRepository<Role> roleRepository, IRepository<RoleGroup> roleGroupRepository) {
+    public void CombineDecisions(IAccessDecisionCombinator combinator, IRepository<Role> roleRepository,
+                                 IRepository<RoleGroup> roleGroupRepository) {
       if (_disabled) return;
 
       foreach (var roleId in _roles) {
@@ -60,6 +65,11 @@ namespace Seabites.Naughty.Security {
       foreach (var roleGroupId in _roleGroups) {
         roleGroupRepository.Get(roleGroupId).CombineDecisions(combinator, roleRepository);
       }
+    }
+
+    void ThrowIfDisabled() {
+      if (_disabled)
+        throw new Exception("Yo bro, you can't mutate this thing. It's been disabled!");
     }
 
     // State

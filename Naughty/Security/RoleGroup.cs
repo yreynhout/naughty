@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using Seabites.Naughty.Infrastructure;
-using Seabites.Naughty.Messaging;
+using Seabites.Naughty.Messaging.Events;
 
 namespace Seabites.Naughty.Security {
   public class RoleGroup : AggregateRootEntity<RoleGroupId> {
@@ -29,16 +29,16 @@ namespace Seabites.Naughty.Security {
           new ArchivedRoleGroup(Id));
     }
 
-    public void AddRole(RoleId roleId) {
+    public void AddRole(Role role) {
       ThrowIfArchived();
       ApplyEvent(
-        new AddedRoleToRoleGroup(Id, roleId));
+        new AddedRoleToRoleGroup(Id, role.Id));
     }
 
-    public void RemoveRole(RoleId roleId) {
+    public void RemoveRole(Role role) {
       ThrowIfArchived();
       ApplyEvent(
-        new RemovedRoleFromRoleGroup(Id, roleId));
+        new RemovedRoleFromRoleGroup(Id, role.Id));
     }
 
     public void CombineDecisions(IAccessDecisionCombinator combinator, IRepository<Role> roleRepository) {
@@ -54,6 +54,7 @@ namespace Seabites.Naughty.Security {
       if (_archived)
         throw new Exception("Yo bro, you can't mutate this thing. It's been archived!");
     }
+
     // State
 
     HashSet<RoleId> _roles;

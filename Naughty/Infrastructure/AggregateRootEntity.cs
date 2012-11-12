@@ -59,7 +59,7 @@ namespace Seabites.Naughty.Infrastructure {
 
     public void Initialize(IEnumerable<object> events) {
       _version = 0;
-      foreach(var @event in events) {
+      foreach (var @event in events) {
         Play(@event);
         _version++;
       }
@@ -74,13 +74,13 @@ namespace Seabites.Naughty.Infrastructure {
 
     void Play(object @event) {
       Action<object> method;
-      if(_applyMethods.TryGetValue(@event.GetType(), out method)) {
+      if (_applyMethods.TryGetValue(@event.GetType(), out method)) {
         method(@event);
       }
     }
 
     void Record(object @event) {
-      if(_size == _changes.Length) {
+      if (_size == _changes.Length) {
         var copy = new object[_size*2];
         Array.Copy(_changes, 0, copy, 0, _size);
         _changes = copy;

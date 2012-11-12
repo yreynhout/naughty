@@ -17,23 +17,25 @@ namespace Seabites.Naughty.Infrastructure {
     public bool TryWrite(ISqlStatement statement) {
       // Bad code ... you're assuming order!
       var properties = statement.Parameters.GetType().GetProperties().ToArray();
-      if((_parameters.Count + properties.Length) <= 2100) {
-        if(statement is SqlStoredProcedureStatement) {
+      if ((_parameters.Count + properties.Length) <= 2100) {
+        if (statement is SqlStoredProcedureStatement) {
           var text = statement.Text;
           var index = 0;
           foreach (var property in properties) {
             var parameterName = "@P" + _parameterIndex++;
             _parameters.Add(
               new SqlParameter(parameterName, property.GetValue(statement.Parameters)));
-            if(index > 0) {
+            if (index > 0) {
               text = text + ", " + parameterName;
-            } else {
+            }
+            else {
               text = text + " " + parameterName;
             }
             index++;
           }
           _text = _text + "EXEC " + text + ";";
-        } else if(statement is SqlTextStatement) {
+        }
+        else if (statement is SqlTextStatement) {
           var text = statement.Text;
           foreach (var property in properties) {
             var parameterName = "@P" + _parameterIndex++;
@@ -41,9 +43,9 @@ namespace Seabites.Naughty.Infrastructure {
               new SqlParameter(parameterName, property.GetValue(statement.Parameters)));
             text = text.Replace("@" + property.Name, parameterName);
           }
-          _text = _text + text + ";";  
+          _text = _text + text + ";";
         }
-        
+
         return true;
       }
       return false;

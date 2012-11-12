@@ -10,7 +10,7 @@ namespace Seabites.Naughty.Infrastructure {
     }
 
     public void Handle(object message) {
-      if(message is TMessage) _handler.Handle((TMessage) message);
+      if (message is TMessage) _handler.Handle((TMessage) message);
     }
   }
 }

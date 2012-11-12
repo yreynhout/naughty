@@ -1,10 +1,11 @@
 using System;
 
-namespace Seabites.Naughty.Messaging {
-  public class AddedPermissionToRole {
+namespace Seabites.Naughty.Messaging.Commands {
+  public class DenyRolePermission {
     public readonly Guid RoleId;
     public readonly Guid PermissionId;
-    public AddedPermissionToRole(Guid roleId, Guid permissionId) {
+
+    public DenyRolePermission(Guid roleId, Guid permissionId) {
       RoleId = roleId;
       PermissionId = permissionId;
     }

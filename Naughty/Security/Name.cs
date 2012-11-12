@@ -5,9 +5,9 @@ namespace Seabites.Naughty.Security {
     readonly string _value;
 
     public Name(string value) {
-      if(String.IsNullOrEmpty(value)) 
+      if (String.IsNullOrEmpty(value))
         throw new ArgumentException("A name cannot be null or empty.");
-      if(value.Length > Metadata.NameMaxLength)
+      if (value.Length > Metadata.NameMaxLength)
         throw new ArgumentException(string.Format("A name cannot be longer than {0} characters.", Metadata.NameMaxLength));
       _value = value;
     }

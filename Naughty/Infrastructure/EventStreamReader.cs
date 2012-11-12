@@ -12,7 +12,7 @@ namespace Seabites.Naughty.Infrastructure {
 
     public EventStream Read(Guid id) {
       List<object> events;
-      if(_storage.TryGetValue(id, out events)) {
+      if (_storage.TryGetValue(id, out events)) {
         return new EventStream(id, events.ToArray());
       }
       return new EventStream(id, new object[0]);

@@ -17,10 +17,8 @@ namespace Seabites.Naughty.Infrastructure {
       _statements.Add(value);
     }
 
-    public void OnError(Exception error) {
-    }
+    public void OnError(Exception error) {}
 
-    public void OnCompleted() {
-    }
+    public void OnCompleted() {}
   }
 }

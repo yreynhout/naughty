@@ -1,16 +1,16 @@
 ﻿using System;
 using Seabites.Naughty.Infrastructure;
-using Seabites.Naughty.Messaging;
+using Seabites.Naughty.Messaging.Events;
 
 namespace Seabites.Naughty.Projections {
   public class UserAccountEffectiveRolesProjectionHandler
     : IHandle<DisabledUserAccount>,
-    IHandle<RoleGrantedToUserAccount>,
-    IHandle<RoleGroupGrantedToUserAccount>,
-    IHandle<RoleGroupRevokedFromUserAccount>,
-    IHandle<RoleRevokedFromUserAccount>,
-    IHandle<AddedRoleToRoleGroup>,
-    IHandle<RemovedRoleFromRoleGroup> {
+      IHandle<RoleGrantedToUserAccount>,
+      IHandle<RoleGroupGrantedToUserAccount>,
+      IHandle<RoleGroupRevokedFromUserAccount>,
+      IHandle<RoleRevokedFromUserAccount>,
+      IHandle<AddedRoleToRoleGroup>,
+      IHandle<RemovedRoleFromRoleGroup> {
     readonly IObserver<ISqlStatement> _observer;
     readonly ILookupRolesOfRoleGroup _lookup;
     readonly Random _random;
@@ -27,7 +27,7 @@ namespace Seabites.Naughty.Projections {
       _observer.OnNext(
         new SqlTextStatement(
           "DELETE FROM [UserAccountEffectiveRoles] WHERE [UserAccountId] = @UserAccountId",
-          new { UserAccountId = message.Id }));
+          new {UserAccountId = message.UserAccountId}));
     }
 
     public void Handle(RoleGrantedToUserAccount message) {
@@ -37,14 +37,14 @@ namespace Seabites.Naughty.Projections {
           "BEGIN" +
           "  INSERT INTO [UserAccountEffectiveRoles] ([UserAccountId],[RoleId],[RoleGroupId]) VALUES (@UserAccountId,@RoleId,NULL) " +
           "END",
-          new { UserAccountId = message.UserAccountId, RoleId = message.RoleId }));
+          new {UserAccountId = message.UserAccountId, RoleId = message.RoleId}));
     }
 
     public void Handle(RoleRevokedFromUserAccount message) {
       _observer.OnNext(
         new SqlTextStatement(
           "DELETE FROM [UserAccountEffectiveRoles] WHERE [UserAccountId] = @UserAccountId AND [RoleId] = @RoleId AND [RoleGroupId] IS NULL)",
-          new { UserAccountId = message.UserAccountId, RoleId = message.RoleId }));
+          new {UserAccountId = message.UserAccountId, RoleId = message.RoleId}));
     }
 
     public void Handle(RoleGroupGrantedToUserAccount message) {
@@ -56,16 +56,16 @@ namespace Seabites.Naughty.Projections {
       }
       // role group marker row - this would be the kind of row you'd need to skip if you wanted to get the effective roles
       _observer.OnNext(
-          new SqlTextStatement(
-            "INSERT INTO [UserAccountEffectiveRoles] ([UserAccountId],[RoleId],[RoleGroupId]) VALUES (@UserAccountId,NULL,@RoleGroupId)",
-            new { UserAccountId = message.UserAccountId, RoleGroupId = message.RoleGroupId }));
+        new SqlTextStatement(
+          "INSERT INTO [UserAccountEffectiveRoles] ([UserAccountId],[RoleId],[RoleGroupId]) VALUES (@UserAccountId,NULL,@RoleGroupId)",
+          new {UserAccountId = message.UserAccountId, RoleGroupId = message.RoleGroupId}));
     }
 
     public void Handle(RoleGroupRevokedFromUserAccount message) {
       _observer.OnNext(
         new SqlTextStatement(
           "DELETE FROM [UserAccountEffectiveRoles] WHERE [UserAccountId] = @UserAccountId AND [RoleGroupId] = @RoleGroupId)",
-          new { UserAccountId = message.UserAccountId, RoleGroupId = message.RoleGroupId }));
+          new {UserAccountId = message.UserAccountId, RoleGroupId = message.RoleGroupId}));
     }
 
     public void Handle(AddedRoleToRoleGroup message) {
@@ -73,14 +73,15 @@ namespace Seabites.Naughty.Projections {
       _observer.OnNext(
         new SqlTextStatement(
           string.Format(
-          "CREATE TABLE {0} (UserAccountId UNIQUEIDENTIFIER) " + Environment.NewLine +
-          "INSERT INTO {0} " + Environment.NewLine +
-          "SELECT UserAccountId FROM UserAccountEffectiveRoles WHERE RoleGroupId = @RoleGroupId " + Environment.NewLine +
-          "INSERT INTO UserAccountEffectiveRoles (UserAccountId, RoleGroupId, RoleId) " + Environment.NewLine +
-          "SELECT UserAccountId, @RoleGroupId, @RoleId FROM {0} " + Environment.NewLine +
-          "DROP TABLE {0}",
-          tempTableName
-          ),
+            "CREATE TABLE {0} (UserAccountId UNIQUEIDENTIFIER) " + Environment.NewLine +
+            "INSERT INTO {0} " + Environment.NewLine +
+            "SELECT UserAccountId FROM UserAccountEffectiveRoles WHERE RoleGroupId = @RoleGroupId " +
+            Environment.NewLine +
+            "INSERT INTO UserAccountEffectiveRoles (UserAccountId, RoleGroupId, RoleId) " + Environment.NewLine +
+            "SELECT UserAccountId, @RoleGroupId, @RoleId FROM {0} " + Environment.NewLine +
+            "DROP TABLE {0}",
+            tempTableName
+            ),
           new {RoleGroupId = message.RoleGroupId, RoleId = message.RoleId}));
     }
 
@@ -88,7 +89,7 @@ namespace Seabites.Naughty.Projections {
       _observer.OnNext(
         new SqlTextStatement(
           "DELETE FROM UserAccountEffectiveRoles WHERE RoleGroupId = @RoleGroupId AND RoleId = @RoleId",
-          new { RoleGroupId = message.RoleGroupId, RoleId = message.RoleId }));
+          new {RoleGroupId = message.RoleGroupId, RoleId = message.RoleId}));
     }
-  }
+      }
 }

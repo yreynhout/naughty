@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 using Seabites.Naughty.Infrastructure;
-using Seabites.Naughty.Messaging;
+using Seabites.Naughty.Messaging.Events;
 
 namespace Seabites.Naughty.Security {
   public class Role : AggregateRootEntity<RoleId> {
@@ -18,7 +18,7 @@ namespace Seabites.Naughty.Security {
 
     // Behavior
 
-    public Role(RoleId roleId, Name name) 
+    public Role(RoleId roleId, Name name)
       : this(roleId) {
       ApplyEvent(
         new AddedRole(roleId, name));
@@ -112,7 +112,7 @@ namespace Seabites.Naughty.Security {
     void Apply(AddedPermissionToRole @event) {
       _permissions.Add(
         new RolePermission(
-          new PermissionId(@event.PermissionId), 
+          new PermissionId(@event.PermissionId),
           AccessDecision.Indeterminate));
     }
 

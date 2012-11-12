@@ -23,7 +23,7 @@ namespace Seabites.Naughty.Security {
 
     public override bool Equals(object obj) {
       if (ReferenceEquals(null, obj)) return false;
-      return obj is UserAccountId && Equals((UserAccountId)obj);
+      return obj is UserAccountId && Equals((UserAccountId) obj);
     }
 
     public override int GetHashCode() {
@@ -38,6 +38,8 @@ namespace Seabites.Naughty.Security {
       return String.Format("UserAccount/{0}", _value.ToString().ToUpperInvariant());
     }
 
-    Guid IAggregateIdentity.Value { get { return _value; } }
+    Guid IAggregateIdentity.Value {
+      get { return _value; }
+    }
   }
 }

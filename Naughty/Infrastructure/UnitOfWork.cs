@@ -7,7 +7,7 @@ namespace Seabites.Naughty.Infrastructure {
     readonly List<IAggregateRootEntity> _roots;
 
     public UnitOfWork() {
-      _roots = new List< IAggregateRootEntity>();
+      _roots = new List<IAggregateRootEntity>();
     }
 
     public void Attach(IAggregateRootEntity root) {

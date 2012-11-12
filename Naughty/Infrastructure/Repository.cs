@@ -18,7 +18,7 @@ namespace Seabites.Naughty.Infrastructure {
 
     public TAggregateRootEntity Get(Guid id) {
       IAggregateRootEntity weakRoot;
-      if(_unitOfWork.TryGet(id, out weakRoot)) {
+      if (_unitOfWork.TryGet(id, out weakRoot)) {
         return (TAggregateRootEntity) weakRoot;
       }
       var root = _factory(id);
@@ -30,5 +30,5 @@ namespace Seabites.Naughty.Infrastructure {
     public void Add(TAggregateRootEntity root) {
       _unitOfWork.Attach(root);
     }
-  }
+    }
 }

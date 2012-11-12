@@ -10,8 +10,16 @@ namespace Seabites.Naughty.Infrastructure {
       _parameters = parameters;
     }
 
-    public string Text { get { return _text; } }
-    public object Parameters { get { return _parameters; } }
-    public CommandType CommandType { get { return CommandType.StoredProcedure; } }
+    public string Text {
+      get { return _text; }
+    }
+
+    public object Parameters {
+      get { return _parameters; }
+    }
+
+    public CommandType CommandType {
+      get { return CommandType.StoredProcedure; }
+    }
   }
 }

@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Seabites.Naughty.Infrastructure;
-using Seabites.Naughty.Messaging;
+using Seabites.Naughty.Messaging.Events;
 
 namespace Seabites.Naughty.Projections {
   public class MemoryRoleGroupLookup :
