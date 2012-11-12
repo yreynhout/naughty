@@ -16,8 +16,8 @@ namespace Seabites.Naughty.Application {
     }
 
     public void Handle(SecurityContext<TMessage> context) {
-      _authorizer.Authorize(context.Message, context.Request);
-      _handler.Handle(context.Request);
+      _authorizer.Authorize(context.AccountId, context.Message);
+      _handler.Handle(context.Message);
     }
   }
 }

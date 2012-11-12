@@ -2,20 +2,20 @@ using Seabites.Naughty.Security;
 
 namespace Seabites.Naughty.Application {
   public class SecurityContext<TMessage> {
-    readonly TMessage _request;
-    readonly UserAccountId _requester;
+    readonly TMessage _message;
+    readonly UserAccountId _accountId;
 
-    public SecurityContext(UserAccountId requester, TMessage request) {
-      _request = request;
-      _requester = requester;
+    public SecurityContext(UserAccountId accountId, TMessage message) {
+      _message = message;
+      _accountId = accountId;
     }
 
-    public TMessage Request {
-      get { return _request; }
+    public TMessage Message {
+      get { return _message; }
     }
 
-    public UserAccountId Message {
-      get { return _requester; }
+    public UserAccountId AccountId {
+      get { return _accountId; }
     }
   }
 }
