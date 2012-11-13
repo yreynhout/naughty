@@ -1,18 +1,15 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Seabites.Naughty.Infrastructure;
 using Seabites.Naughty.Messaging.Events;
 
 namespace Seabites.Naughty.Projections {
   public class MemoryRoleGroupLookup :
-    ILookupRolesOfRoleGroup,
-    IHandle<AddedRoleToRoleGroup>,
-    IHandle<RemovedRoleFromRoleGroup> {
+    ILookupRolesOfRoleGroup {
     readonly Dictionary<Guid, HashSet<Guid>> _rolesInRoleGroup;
 
-    public MemoryRoleGroupLookup() {
-      _rolesInRoleGroup = new Dictionary<Guid, HashSet<Guid>>();
+    public MemoryRoleGroupLookup(Dictionary<Guid, HashSet<Guid>> storage) {
+      _rolesInRoleGroup = storage;
     }
 
     public void Handle(AddedRoleToRoleGroup message) {

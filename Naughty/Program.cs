@@ -75,9 +75,21 @@ namespace Seabites.Naughty {
       commandHandler.Handle(new SecurityContext<AddUserAccount>(administratorId, command));
 
       // Using security - in projection code
+      var builder = new SqlConnectionStringBuilder("Data Source=.\\SQLEXPRESS;Initial Catalog=<YourStoreHere>;Integrated Security=SSPI;");
+
+      // What that table could look like ...
+      //CREATE TABLE [UserAccountEffectiveRoles](
+      //  [UserAccountId] [uniqueidentifier] NOT NULL,
+      //  [RoleId] [uniqueidentifier] NULL,
+      //  [RoleGroupId] [uniqueidentifier] NULL,
+      //  [Id] [int] IDENTITY(1,1) NOT NULL,
+      //  CONSTRAINT [PK_UserAccountEffectiveRoles] PRIMARY KEY CLUSTERED ( [Id] ASC )
+      //)
 
       var observer = new SqlStatementObserver();
-      var lookup = new MemoryRoleGroupLookup();
+      // var lookup = new MemoryRoleGroupLookup(new Dictionary<Guid, HashSet<Guid>>());
+      var lookupInitializer = new SqlBasedLookupRolesOfRoleGroupInitializer(builder);
+      var lookup = lookupInitializer.Initialize();
       var projectionHandler = new UserAccountEffectiveRolesProjectionHandler(observer, lookup);
       var compositeProjectionHandler = new CompositeHandler(
         new IHandle<object>[] {
@@ -96,8 +108,7 @@ namespace Seabites.Naughty {
       }
 
       new BatchedSqlStatementFlusher(
-        new SqlConnectionStringBuilder(
-          "Data Source=.\\SQLEXPRESS;Initial Catalog=<YourStoreHere>;Integrated Security=SSPI;")).
+        builder).
         Flush(observer.Statements);
 
       Console.ReadLine();

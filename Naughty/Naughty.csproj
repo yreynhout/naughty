@@ -101,6 +101,7 @@
     <Compile Include="Program.cs" />
     <Compile Include="Projections\ILookupRolesOfRoleGroup.cs" />
     <Compile Include="Projections\MemoryRoleGroupLookup.cs" />
+    <Compile Include="Projections\SqlBasedLookupRolesOfRoleGroupInitializer.cs" />
     <Compile Include="Projections\UserAccountEffectiveRolesProjectionHandler.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Application\SecurityContext.cs" />
