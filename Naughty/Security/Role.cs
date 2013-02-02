@@ -1,32 +1,33 @@
 using System;
 using System.Collections.Generic;
-using Seabites.Naughty.Infrastructure;
+using AggregateSource;
 using Seabites.Naughty.Messaging.Events;
 
 namespace Seabites.Naughty.Security {
-  public class Role : AggregateRootEntity<RoleId> {
-    public static Func<Guid, Role> Factory = id => new Role(new RoleId(id));
+  public class Role : AggregateRootEntity {
+    public static readonly Func<Role> Factory = () => new Role();
 
-    Role(RoleId id) : base(id) {
-      Register<AddedRole>(Apply);
-      Register<AddedPermissionToRole>(Apply);
-      Register<RemovedPermissionFromRole>(Apply);
-      Register<RolePermissionAllowed>(Apply);
-      Register<RolePermissionDenied>(Apply);
-      Register<ArchivedRole>(Apply);
+    Role() {
+      Register<AddedRole>(When);
+      Register<AddedPermissionToRole>(When);
+      Register<RemovedPermissionFromRole>(When);
+      Register<RolePermissionAllowed>(When);
+      Register<RolePermissionDenied>(When);
+      Register<ArchivedRole>(When);
     }
+
+    public RoleId Id { get; private set; }
 
     // Behavior
 
-    public Role(RoleId roleId, Name name)
-      : this(roleId) {
-      ApplyEvent(
+    public Role(RoleId roleId, Name name) : this() {
+      Apply(
         new AddedRole(roleId, name));
     }
 
     public void Archive() {
       if (!_archived)
-        ApplyEvent(
+        Apply(
           new ArchivedRole(Id));
     }
 
@@ -39,7 +40,7 @@ namespace Seabites.Naughty.Security {
     public void AddPermission(PermissionId permissionId) {
       ThrowIfArchived();
       if (IsUnknownPermission(permissionId)) {
-        ApplyEvent(
+        Apply(
           new AddedPermissionToRole(Id, permissionId));
       }
     }
@@ -53,7 +54,7 @@ namespace Seabites.Naughty.Security {
     public void AllowPermission(PermissionId permissionId) {
       ThrowIfArchived();
       if (IsKnownPermission(permissionId)) {
-        ApplyEvent(
+        Apply(
           new RolePermissionAllowed(Id, permissionId));
       }
     }
@@ -61,7 +62,7 @@ namespace Seabites.Naughty.Security {
     public void DenyPermission(PermissionId permissionId) {
       ThrowIfArchived();
       if (IsKnownPermission(permissionId)) {
-        ApplyEvent(
+        Apply(
           new RolePermissionDenied(Id, permissionId));
       }
     }
@@ -69,7 +70,7 @@ namespace Seabites.Naughty.Security {
     public void RemovePermission(PermissionId permissionId) {
       ThrowIfArchived();
       if (IsKnownPermission(permissionId)) {
-        ApplyEvent(
+        Apply(
           new RemovedPermissionFromRole(Id, permissionId));
       }
     }
@@ -99,33 +100,34 @@ namespace Seabites.Naughty.Security {
     List<RolePermission> _permissions;
     bool _archived;
 
-    void Apply(AddedRole @event) {
+    void When(AddedRole @event) {
+      Id = new RoleId(@event.RoleId);
       _permissions = new List<RolePermission>();
       _archived = false;
     }
 
-    void Apply(ArchivedRole @event) {
+    void When(ArchivedRole @event) {
       _archived = true;
       _permissions.Clear();
     }
 
-    void Apply(AddedPermissionToRole @event) {
+    void When(AddedPermissionToRole @event) {
       _permissions.Add(
         new RolePermission(
           new PermissionId(@event.PermissionId),
           AccessDecision.Indeterminate));
     }
 
-    void Apply(RemovedPermissionFromRole @event) {
+    void When(RemovedPermissionFromRole @event) {
       _permissions.Remove(
         FindPermission(new PermissionId(@event.PermissionId)));
     }
 
-    void Apply(RolePermissionDenied @event) {
+    void When(RolePermissionDenied @event) {
       FindPermission(new PermissionId(@event.PermissionId)).Deny();
     }
 
-    void Apply(RolePermissionAllowed @event) {
+    void When(RolePermissionAllowed @event) {
       FindPermission(new PermissionId(@event.PermissionId)).Allow();
     }
 

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
+using AggregateSource;
 using Seabites.Naughty.Application;
 using Seabites.Naughty.Infrastructure;
 using Seabites.Naughty.Messaging.Commands;
@@ -12,40 +13,46 @@ namespace Seabites.Naughty {
   class Program {
     static void Main() {
       var storage = new Dictionary<Guid, List<object>>();
-      var reader = new EventStreamReader(storage);
+      Func<Guid, Tuple<Int32, IEnumerable<object>>> reader = id => {
+                                                               List<object> events;
+                                                               if(storage.TryGetValue(id, out events)) {
+                                                                 return new Tuple<int, IEnumerable<object>>(events.Count, events);
+                                                               }
+                                                               return null;
+                                                             };
       var unitOfWork = new UnitOfWork();
 
-      var roleRepository = new Repository<Role>(Role.Factory, reader, unitOfWork);
-      var roleGroupRepository = new Repository<RoleGroup>(RoleGroup.Factory, reader, unitOfWork);
-      var userAccountRepository = new Repository<UserAccount>(UserAccount.Factory, reader, unitOfWork);
+      var roleRepository = new Repository<Role>(Role.Factory, unitOfWork, reader);
+      var roleGroupRepository = new Repository<RoleGroup>(RoleGroup.Factory, unitOfWork, reader);
+      var userAccountRepository = new Repository<UserAccount>(UserAccount.Factory, unitOfWork, reader);
 
       // Setting up security (accounts, roles and authorization)
       var administratorRoleId = new RoleId(Guid.NewGuid());
       var administratorRole = new Role(administratorRoleId, new Name("Administrator"));
       administratorRole.AddPermissions(SecurityPermissions.All);
       administratorRole.AllowPermissions(SecurityPermissions.All);
-      roleRepository.Add(administratorRole);
+      roleRepository.Add(administratorRole.Id, administratorRole);
       var subRole1Id = new RoleId(Guid.NewGuid());
       var subRole1 = new Role(subRole1Id, new Name("SubRole1"));
       subRole1.AddPermission(SecurityPermissions.AddRole);
       subRole1.DenyPermission(SecurityPermissions.AddRole);
-      roleRepository.Add(subRole1);
+      roleRepository.Add(subRole1.Id, subRole1);
       var subRole2Id = new RoleId(Guid.NewGuid());
       var subRole2 = new Role(subRole2Id, new Name("SubRole2"));
       subRole2.AddPermission(SecurityPermissions.AddRole);
       subRole2.AllowPermission(SecurityPermissions.AddRole);
-      roleRepository.Add(subRole2);
+      roleRepository.Add(subRole2.Id,subRole2);
       var group1Id = new RoleGroupId(Guid.NewGuid());
       var group1 = new RoleGroup(group1Id, new Name("SubRole 1 & 2"));
       group1.AddRole(subRole1);
       group1.AddRole(subRole2);
-      roleGroupRepository.Add(group1);
+      roleGroupRepository.Add(group1.Id, group1);
 
       var administratorId = new UserAccountId(Guid.NewGuid());
       var administrator = new UserAccount(administratorId, new UserAccountName("Administrator"));
       administrator.GrantRole(administratorRole);
       administrator.GrantRoleGroup(group1);
-      userAccountRepository.Add(administrator);
+      userAccountRepository.Add(administrator.Id, administrator);
 
       // Using security - in domain layer code
       var combinator = new AccessDecisionCombinator();

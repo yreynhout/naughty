@@ -1,6 +1,6 @@
 using System;
 using System.Security;
-using Seabites.Naughty.Infrastructure;
+using AggregateSource;
 using Seabites.Naughty.Security;
 
 namespace Seabites.Naughty.Application {

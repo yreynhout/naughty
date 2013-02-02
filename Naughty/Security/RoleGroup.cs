@@ -1,43 +1,43 @@
 ﻿using System;
 using System.Collections.Generic;
-using Seabites.Naughty.Infrastructure;
+using AggregateSource;
 using Seabites.Naughty.Messaging.Events;
 
 namespace Seabites.Naughty.Security {
-  public class RoleGroup : AggregateRootEntity<RoleGroupId> {
-    public static Func<Guid, RoleGroup> Factory = id => new RoleGroup(new RoleGroupId(id));
+  public class RoleGroup : AggregateRootEntity {
+    public static readonly Func<RoleGroup> Factory = () => new RoleGroup();
 
-    RoleGroup(RoleGroupId id)
-      : base(id) {
-      Register<AddedRoleGroup>(Apply);
-      Register<ArchivedRoleGroup>(Apply);
-      Register<AddedRoleToRoleGroup>(Apply);
-      Register<RemovedRoleFromRoleGroup>(Apply);
+    RoleGroup() {
+      Register<AddedRoleGroup>(When);
+      Register<ArchivedRoleGroup>(When);
+      Register<AddedRoleToRoleGroup>(When);
+      Register<RemovedRoleFromRoleGroup>(When);
     }
+
+    public RoleGroupId Id { get; private set; }
 
     // Behavior
 
-    public RoleGroup(RoleGroupId roleGroupId, Name name)
-      : this(roleGroupId) {
-      ApplyEvent(
+    public RoleGroup(RoleGroupId roleGroupId, Name name) : this() {
+      Apply(
         new AddedRoleGroup(roleGroupId, name));
     }
 
     public void Archive() {
       if (!_archived)
-        ApplyEvent(
+        Apply(
           new ArchivedRoleGroup(Id));
     }
 
     public void AddRole(Role role) {
       ThrowIfArchived();
-      ApplyEvent(
+      Apply(
         new AddedRoleToRoleGroup(Id, role.Id));
     }
 
     public void RemoveRole(Role role) {
       ThrowIfArchived();
-      ApplyEvent(
+      Apply(
         new RemovedRoleFromRoleGroup(Id, role.Id));
     }
 
@@ -60,21 +60,22 @@ namespace Seabites.Naughty.Security {
     HashSet<RoleId> _roles;
     bool _archived;
 
-    void Apply(AddedRoleGroup @event) {
+    void When(AddedRoleGroup @event) {
+      Id = new RoleGroupId(@event.RoleGroupId);
       _roles = new HashSet<RoleId>();
       _archived = false;
     }
 
-    void Apply(ArchivedRoleGroup @event) {
+    void When(ArchivedRoleGroup @event) {
       _archived = true;
       _roles.Clear();
     }
 
-    void Apply(AddedRoleToRoleGroup @event) {
+    void When(AddedRoleToRoleGroup @event) {
       _roles.Add(new RoleId(@event.RoleId));
     }
 
-    void Apply(RemovedRoleFromRoleGroup @event) {
+    void When(RemovedRoleFromRoleGroup @event) {
       _roles.Remove(new RoleId(@event.RoleId));
     }
   }

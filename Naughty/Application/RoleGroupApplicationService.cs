@@ -1,4 +1,5 @@
 using System;
+using AggregateSource;
 using Seabites.Naughty.Infrastructure;
 using Seabites.Naughty.Messaging.Commands;
 using Seabites.Naughty.Security;
@@ -20,7 +21,7 @@ namespace Seabites.Naughty.Application {
     }
 
     public void Handle(AddRoleGroup message) {
-      _roleGroupRepository.Add(
+      _roleGroupRepository.Add(message.RoleGroupId,
         new RoleGroup(new RoleGroupId(message.RoleGroupId), new Name(message.Name)));
     }
 

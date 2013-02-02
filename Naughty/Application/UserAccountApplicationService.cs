@@ -1,4 +1,5 @@
 using System;
+using AggregateSource;
 using Seabites.Naughty.Infrastructure;
 using Seabites.Naughty.Messaging.Commands;
 using Seabites.Naughty.Security;
@@ -26,7 +27,7 @@ namespace Seabites.Naughty.Application {
     }
 
     public void Handle(AddUserAccount message) {
-      _userAccountRepository.Add(
+      _userAccountRepository.Add(message.UserAccountId,
         new UserAccount(
           new UserAccountId(message.UserAccountId),
           new UserAccountName(message.Name)));

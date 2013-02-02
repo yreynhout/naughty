@@ -1,8 +1,7 @@
 using System;
-using Seabites.Naughty.Infrastructure;
 
 namespace Seabites.Naughty.Security {
-  public struct UserAccountId : IEquatable<UserAccountId>, IAggregateIdentity {
+  public struct UserAccountId : IEquatable<UserAccountId> {
     readonly Guid _value;
 
     public UserAccountId(Guid value) {
@@ -36,10 +35,6 @@ namespace Seabites.Naughty.Security {
 
     public override string ToString() {
       return String.Format("UserAccount/{0}", _value.ToString().ToUpperInvariant());
-    }
-
-    Guid IAggregateIdentity.Value {
-      get { return _value; }
     }
   }
 }

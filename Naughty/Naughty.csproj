@@ -32,6 +32,10 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="AggregateSource, Version=0.0.0.1, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\lib\AggregateSource.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Data" />
@@ -43,27 +47,15 @@
     <Compile Include="Application\RoleApplicationService.cs" />
     <Compile Include="Application\RoleGroupApplicationService.cs" />
     <Compile Include="Application\UserAccountApplicationService.cs" />
-    <Compile Include="Infrastructure\AggregateRootEntity.cs" />
     <Compile Include="Infrastructure\CompositeHandler.cs" />
-    <Compile Include="Infrastructure\EventStream.cs" />
-    <Compile Include="Infrastructure\EventStreamReader.cs" />
     <Compile Include="Infrastructure\HandlerAdapter.cs" />
-    <Compile Include="Infrastructure\IAggregateChangeTracker.cs" />
-    <Compile Include="Infrastructure\IAggregateIdentity.cs" />
-    <Compile Include="Infrastructure\IAggregateInitializer.cs" />
-    <Compile Include="Infrastructure\IAggregateRootEntity.cs" />
-    <Compile Include="Infrastructure\IEventStreamReader.cs" />
     <Compile Include="Infrastructure\IHandle.cs" />
-    <Compile Include="Infrastructure\IRepository.cs" />
     <Compile Include="Infrastructure\ISqlStatement.cs" />
-    <Compile Include="Infrastructure\IUnitOfWork.cs" />
-    <Compile Include="Infrastructure\Repository.cs" />
     <Compile Include="Infrastructure\SqlStatementBatchWriter.cs" />
     <Compile Include="Infrastructure\BatchedSqlStatementFlusher.cs" />
     <Compile Include="Infrastructure\SqlStatementObserver.cs" />
     <Compile Include="Infrastructure\SqlStoredProcedureStatement.cs" />
     <Compile Include="Infrastructure\SqlTextStatement.cs" />
-    <Compile Include="Infrastructure\UnitOfWork.cs" />
     <Compile Include="Application\IPermissionResolver.cs" />
     <Compile Include="Messaging\Commands\AddRoleGroup.cs" />
     <Compile Include="Messaging\Commands\AddRoleToRoleGroup.cs" />

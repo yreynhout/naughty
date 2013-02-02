@@ -1,0 +1,326 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>AggregateSource</name>
+    </assembly>
+    <members>
+        <member name="T:AggregateSource.Aggregate">
+            <summary>
+            Base class for tracking aggregate meta data and its <see cref="T:AggregateSource.AggregateRootEntity"/>.
+            </summary>
+        </member>
+        <member name="F:AggregateSource.Aggregate.InitialVersion">
+            <summary>
+            The initial version of an aggregate.
+            </summary>
+        </member>
+        <member name="M:AggregateSource.Aggregate.#ctor(System.Guid,System.Int32,AggregateSource.AggregateRootEntity)">
+            <summary>
+            Initializes a new instance of the <see cref="T:AggregateSource.Aggregate"/> class.
+            </summary>
+            <param name="id">The aggregate identifier.</param>
+            <param name="version">The aggregate version.</param>
+            <param name="root">The aggregate root entity.</param>
+            <exception cref="T:System.ArgumentNullException">Thrown when the <paramref name="root"/> is null.</exception>
+        </member>
+        <member name="P:AggregateSource.Aggregate.Id">
+            <summary>
+            Gets the aggregate identifier.
+            </summary>
+            <value>
+            The aggregate identifier.
+            </value>
+        </member>
+        <member name="P:AggregateSource.Aggregate.Version">
+            <summary>
+            Gets the aggregate version.
+            </summary>
+        </member>
+        <member name="P:AggregateSource.Aggregate.Root">
+            <summary>
+            Gets the aggregate root entity.
+            </summary>
+            <value>
+            The aggregate root entity.
+            </value>
+        </member>
+        <member name="T:AggregateSource.AggregateNotFoundException">
+            <summary>
+            Exception that tells callers an aggregate was not found.
+            </summary>
+        </member>
+        <member name="T:AggregateSource.AggregateSourceException">
+            <summary>
+            Marker exception for this library from which all its exceptions derive.
+            </summary>
+        </member>
+        <member name="M:AggregateSource.AggregateSourceException.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:AggregateSource.AggregateSourceException"/> class.
+            </summary>
+        </member>
+        <member name="M:AggregateSource.AggregateSourceException.#ctor(System.String)">
+            <summary>
+            Initializes a new instance of the <see cref="T:AggregateSource.AggregateSourceException"/> class.
+            </summary>
+            <param name="message">The message that describes the error.</param>
+        </member>
+        <member name="M:AggregateSource.AggregateSourceException.#ctor(System.String,System.Exception)">
+            <summary>
+            Initializes a new instance of the <see cref="T:AggregateSource.AggregateSourceException"/> class.
+            </summary>
+            <param name="message">The error message that explains the reason for the exception.</param>
+            <param name="innerException">The exception that is the cause of the current exception, or a null reference (Nothing in Visual Basic) if no inner exception is specified.</param>
+        </member>
+        <member name="M:AggregateSource.AggregateSourceException.#ctor(System.Runtime.Serialization.SerializationInfo,System.Runtime.Serialization.StreamingContext)">
+            <summary>
+            Initializes a new instance of the <see cref="T:AggregateSource.AggregateSourceException"/> class.
+            </summary>
+            <param name="info">The <see cref="T:System.Runtime.Serialization.SerializationInfo"/> that holds the serialized object data about the exception being thrown.</param>
+            <param name="context">The <see cref="T:System.Runtime.Serialization.StreamingContext"/> that contains contextual information about the source or destination.</param>
+        </member>
+        <member name="M:AggregateSource.AggregateNotFoundException.#ctor(System.Guid,System.Type)">
+            <summary>
+            Initializes a new instance of the <see cref="T:AggregateSource.AggregateNotFoundException"/> class.
+            </summary>
+            <param name="aggregateId">The aggregate id.</param>
+            <param name="aggregateType">Type of the aggregate root entity.</param>
+            <exception cref="T:System.ArgumentNullException">Thrown when the <paramref name="aggregateType"/> is null.</exception>
+        </member>
+        <member name="M:AggregateSource.AggregateNotFoundException.#ctor(System.Guid,System.Type,System.String)">
+            <summary>
+            Initializes a new instance of the <see cref="T:AggregateSource.AggregateNotFoundException"/> class.
+            </summary>
+            <param name="aggregateId">The aggregate id.</param>
+            <param name="aggregateType">Type of the aggregate root entity.</param>
+            <param name="message">The message.</param>
+            <exception cref="T:System.ArgumentNullException">Thrown when the <paramref name="aggregateType"/> is null.</exception>
+        </member>
+        <member name="M:AggregateSource.AggregateNotFoundException.#ctor(System.Guid,System.Type,System.String,System.Exception)">
+            <summary>
+            Initializes a new instance of the <see cref="T:AggregateSource.AggregateNotFoundException"/> class.
+            </summary>
+            <param name="aggregateId">The aggregate id.</param>
+            <param name="aggregateType">Type of the aggregate root entity.</param>
+            <param name="message">The message.</param>
+            <param name="innerException">The inner exception.</param>
+            <exception cref="T:System.ArgumentNullException">Thrown when the <paramref name="aggregateType"/> is null.</exception>
+        </member>
+        <member name="M:AggregateSource.AggregateNotFoundException.#ctor(System.Runtime.Serialization.SerializationInfo,System.Runtime.Serialization.StreamingContext)">
+            <summary>
+            Initializes a new instance of the <see cref="T:AggregateSource.AggregateNotFoundException"/> class.
+            </summary>
+            <param name="info">The info.</param>
+            <param name="context">The context.</param>
+        </member>
+        <member name="M:AggregateSource.AggregateNotFoundException.GetObjectData(System.Runtime.Serialization.SerializationInfo,System.Runtime.Serialization.StreamingContext)">
+            <summary>
+            When overridden in a derived class, sets the <see cref="T:System.Runtime.Serialization.SerializationInfo" /> with information about the exception.
+            </summary>
+            <param name="info">The <see cref="T:System.Runtime.Serialization.SerializationInfo" /> that holds the serialized object data about the exception being thrown.</param>
+            <param name="context">The <see cref="T:System.Runtime.Serialization.StreamingContext" /> that contains contextual information about the source or destination.</param>
+            <PermissionSet>
+              <IPermission class="System.Security.Permissions.FileIOPermission, mscorlib, Version=2.0.3600.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" version="1" Read="*AllFiles*" PathDiscovery="*AllFiles*" />
+              <IPermission class="System.Security.Permissions.SecurityPermission, mscorlib, Version=2.0.3600.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" version="1" Flags="SerializationFormatter" />
+              </PermissionSet>
+        </member>
+        <member name="P:AggregateSource.AggregateNotFoundException.AggregateId">
+            <summary>
+            Gets the aggregate id.
+            </summary>
+            <value>
+            The aggregate id.
+            </value>
+        </member>
+        <member name="P:AggregateSource.AggregateNotFoundException.AggregateType">
+            <summary>
+            Gets the type of the aggregate root entity.
+            </summary>
+            <value>
+            The type of the aggregate root entity.
+            </value>
+        </member>
+        <member name="T:AggregateSource.AggregateRootEntity">
+            <summary>
+            Base class for aggregate root entities that need some basic infrastructure for tracking state changes.
+            </summary>
+        </member>
+        <member name="M:AggregateSource.AggregateRootEntity.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:AggregateSource.AggregateRootEntity"/> class.
+            </summary>
+        </member>
+        <member name="M:AggregateSource.AggregateRootEntity.Register``1(System.Action{``0})">
+            <summary>
+            Registers the specified handler to be invoked when the specified event is applied.
+            </summary>
+            <typeparam name="TEvent">The type of the event to register the handler for.</typeparam>
+            <param name="handler">The handler.</param>
+            <exception cref="T:System.ArgumentNullException">Thrown when the <paramref name="handler"/> is null.</exception>
+        </member>
+        <member name="M:AggregateSource.AggregateRootEntity.Initialize(System.Collections.Generic.IEnumerable{System.Object})">
+            <summary>
+            Initializes this instance using the specified events.
+            </summary>
+            <param name="events">The events to initialize with.</param>
+            <exception cref="T:System.ArgumentNullException">Thrown when the <paramref name="events"/> are null.</exception>
+        </member>
+        <member name="M:AggregateSource.AggregateRootEntity.Apply(System.Object)">
+            <summary>
+            Applies the specified event to this instance and invokes the associated state handler.
+            </summary>
+            <param name="event">The event to apply.</param>
+        </member>
+        <member name="M:AggregateSource.AggregateRootEntity.HasChanges">
+            <summary>
+            Determines whether this instance has state changes.
+            </summary>
+            <returns>
+              <c>true</c> if this instance has state changes; otherwise, <c>false</c>.
+            </returns>
+        </member>
+        <member name="M:AggregateSource.AggregateRootEntity.GetChanges">
+            <summary>
+            Gets the state changes applied to this instance.
+            </summary>
+            <returns>A list of recorded state changes.</returns>
+        </member>
+        <member name="M:AggregateSource.AggregateRootEntity.ClearChanges">
+            <summary>
+            Clears the state changes.
+            </summary>
+        </member>
+        <member name="T:AggregateSource.IRepository`1">
+            <summary>
+            Represents a way to retrieve from and add to the collection of <typeparamref name="TAggregateRoot"/>.
+            </summary>
+            <typeparam name="TAggregateRoot">The type of the aggregate root in this collection.</typeparam>
+        </member>
+        <member name="M:AggregateSource.IRepository`1.Get(System.Guid)">
+            <summary>
+            Gets the aggregate root entity associated with the specified aggregate id.
+            </summary>
+            <param name="id">The aggregate id.</param>
+            <returns>An instance of <typeparamref name="TAggregateRoot"/>.</returns>
+            <exception cref="T:AggregateSource.AggregateNotFoundException">Thrown when an aggregate is not found.</exception>
+        </member>
+        <member name="M:AggregateSource.IRepository`1.TryGet(System.Guid,`0@)">
+            <summary>
+            Attempts to get the aggregate root entity associated with the aggregate id.
+            </summary>
+            <param name="id">The aggregate id.</param>
+            <param name="root">The found <typeparamref name="TAggregateRoot"/>, or <c>null</c> if not found.</param>
+            <returns><c>true</c> if the aggregate is found, otherwise <c>false</c>.</returns>
+        </member>
+        <member name="M:AggregateSource.IRepository`1.Add(System.Guid,`0)">
+            <summary>
+            Adds the aggregate root entity to this collection using the specified aggregate id.
+            </summary>
+            <param name="id">The aggregate id.</param>
+            <param name="root">The aggregate root entity.</param>
+        </member>
+        <member name="T:AggregateSource.Properties.Resources">
+            <summary>
+              A strongly-typed resource class, for looking up localized strings, etc.
+            </summary>
+        </member>
+        <member name="P:AggregateSource.Properties.Resources.ResourceManager">
+            <summary>
+              Returns the cached ResourceManager instance used by this class.
+            </summary>
+        </member>
+        <member name="P:AggregateSource.Properties.Resources.Culture">
+            <summary>
+              Overrides the current thread's CurrentUICulture property for all
+              resource lookups using this strongly typed resource class.
+            </summary>
+        </member>
+        <member name="P:AggregateSource.Properties.Resources.Aggregate_VersionGreaterThanOrEqualToInitialVersion">
+            <summary>
+              Looks up a localized string similar to The version must be greater than or equal to {0}..
+            </summary>
+        </member>
+        <member name="P:AggregateSource.Properties.Resources.AggregateNotFoundException_DefaultMessage">
+            <summary>
+              Looks up a localized string similar to The {0} aggregate with identifier {1} could not be found. Please make sure the callsite is indeed passing in an identifier for an {0} aggregate..
+            </summary>
+        </member>
+        <member name="T:AggregateSource.Repository`1">
+            <summary>
+            Represents the default repository implementation.
+            </summary>
+            <typeparam name="TAggregateRoot">Type of the aggregate root entity.</typeparam>
+        </member>
+        <member name="M:AggregateSource.Repository`1.#ctor(System.Func{`0},AggregateSource.UnitOfWork,System.Func{System.Guid,System.Tuple{System.Int32,System.Collections.Generic.IEnumerable{System.Object}}})">
+            <summary>
+            Initializes a new instance of the <see cref="T:AggregateSource.Repository`1"/> class.
+            </summary>
+            <param name="rootFactory">The aggregate root entity factory.</param>
+            <param name="unitOfWork">The unit of work.</param>
+            <param name="eventStreamReader">The event stream reader.</param>
+            <exception cref="T:System.ArgumentNullException">Thrown when the <paramref name="rootFactory"/> or the <paramref name="unitOfWork"/> or the <paramref name="eventStreamReader"/> is null.</exception>
+        </member>
+        <member name="M:AggregateSource.Repository`1.Get(System.Guid)">
+            <summary>
+            Gets the aggregate root entity associated with the specified aggregate id.
+            </summary>
+            <param name="id">The aggregate id.</param>
+            <returns>An instance of <typeparamref name="TAggregateRoot"/>.</returns>
+            <exception cref="T:AggregateSource.AggregateNotFoundException">Thrown when an aggregate is not found.</exception>
+        </member>
+        <member name="M:AggregateSource.Repository`1.TryGet(System.Guid,`0@)">
+            <summary>
+            Attempts to get the aggregate root entity associated with the aggregate id.
+            </summary>
+            <param name="id">The aggregate id.</param>
+            <param name="root">The found <typeparamref name="TAggregateRoot"/>, or <c>null</c> if not found.</param>
+            <returns><c>true</c> if the aggregate is found, otherwise <c>false</c>.</returns>
+        </member>
+        <member name="M:AggregateSource.Repository`1.Add(System.Guid,`0)">
+            <summary>
+            Adds the aggregate root entity to this collection using the specified aggregate id.
+            </summary>
+            <param name="id">The aggregate id.</param>
+            <param name="root">The aggregate root entity.</param>
+        </member>
+        <member name="T:AggregateSource.UnitOfWork">
+            <summary>
+            Tracks changes of attached aggregates.
+            </summary>
+        </member>
+        <member name="M:AggregateSource.UnitOfWork.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:AggregateSource.UnitOfWork"/> class.
+            </summary>
+        </member>
+        <member name="M:AggregateSource.UnitOfWork.Attach(AggregateSource.Aggregate)">
+            <summary>
+            Attaches the specified aggregate.
+            </summary>
+            <param name="aggregate">The aggregate.</param>
+            <exception cref="T:System.ArgumentNullException">Thrown when the <paramref name="aggregate"/> is null.</exception>
+        </member>
+        <member name="M:AggregateSource.UnitOfWork.TryGet(System.Guid,AggregateSource.Aggregate@)">
+            <summary>
+            Attempts to get the <see cref="T:AggregateSource.Aggregate"/> using the specified aggregate id.
+            </summary>
+            <param name="id">The aggregate id.</param>
+            <param name="aggregate">The aggregate if found, otherwise <c>null</c>.</param>
+            <returns><c>true</c> if the aggregate was found, otherwise <c>false</c>.</returns>
+        </member>
+        <member name="M:AggregateSource.UnitOfWork.HasChanges">
+            <summary>
+            Determines whether this instance has aggregates with state changes.
+            </summary>
+            <returns>
+              <c>true</c> if this instance has aggregates with state changes; otherwise, <c>false</c>.
+            </returns>
+        </member>
+        <member name="M:AggregateSource.UnitOfWork.GetChanges">
+            <summary>
+            Gets the aggregates with state changes.
+            </summary>
+            <returns>An enumeration of <see cref="T:AggregateSource.Aggregate"/>.</returns>
+        </member>
+    </members>
+</doc>

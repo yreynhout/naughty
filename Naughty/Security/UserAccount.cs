@@ -1,56 +1,57 @@
 using System;
 using System.Collections.Generic;
-using Seabites.Naughty.Infrastructure;
+using AggregateSource;
 using Seabites.Naughty.Messaging.Events;
 
 namespace Seabites.Naughty.Security {
-  public class UserAccount : AggregateRootEntity<UserAccountId> {
-    public static Func<Guid, UserAccount> Factory = id => new UserAccount(new UserAccountId(id));
+  public class UserAccount : AggregateRootEntity {
+    public static readonly Func<UserAccount> Factory = () => new UserAccount();
 
-    UserAccount(UserAccountId id) : base(id) {
-      Register<AddedUserAccount>(Apply);
-      Register<DisabledUserAccount>(Apply);
-      Register<RoleGrantedToUserAccount>(Apply);
-      Register<RoleRevokedFromUserAccount>(Apply);
-      Register<RoleGroupGrantedToUserAccount>(Apply);
-      Register<RoleGroupRevokedFromUserAccount>(Apply);
+    UserAccount() {
+      Register<AddedUserAccount>(When);
+      Register<DisabledUserAccount>(When);
+      Register<RoleGrantedToUserAccount>(When);
+      Register<RoleRevokedFromUserAccount>(When);
+      Register<RoleGroupGrantedToUserAccount>(When);
+      Register<RoleGroupRevokedFromUserAccount>(When);
     }
+
+    public UserAccountId Id { get; private set; }
 
     // Behavior
 
-    public UserAccount(UserAccountId userAccountId, UserAccountName name)
-      : this(userAccountId) {
-      ApplyEvent(
+    public UserAccount(UserAccountId userAccountId, UserAccountName name) : this() {
+      Apply(
         new AddedUserAccount(userAccountId, name));
     }
 
     public void GrantRole(Role role) {
       ThrowIfDisabled();
-      ApplyEvent(
+      Apply(
         new RoleGrantedToUserAccount(Id, role.Id));
     }
 
     public void GrantRoleGroup(RoleGroup roleGroup) {
       ThrowIfDisabled();
-      ApplyEvent(
+      Apply(
         new RoleGroupGrantedToUserAccount(Id, roleGroup.Id));
     }
 
     public void RevokeRole(Role role) {
       ThrowIfDisabled();
-      ApplyEvent(
+      Apply(
         new RoleRevokedFromUserAccount(Id, role.Id));
     }
 
     public void RevokeRoleGroup(RoleGroup roleGroup) {
       ThrowIfDisabled();
-      ApplyEvent(
+      Apply(
         new RoleGroupRevokedFromUserAccount(Id, roleGroup.Id));
     }
 
     public void Disable() {
       if (!_disabled)
-        ApplyEvent(
+        Apply(
           new DisabledUserAccount(Id));
     }
 
@@ -78,31 +79,32 @@ namespace Seabites.Naughty.Security {
     HashSet<RoleGroupId> _roleGroups;
     bool _disabled;
 
-    void Apply(AddedUserAccount @event) {
+    void When(AddedUserAccount @event) {
+      Id = new UserAccountId(@event.UserAccountId);
       _roles = new HashSet<RoleId>();
       _roleGroups = new HashSet<RoleGroupId>();
       _disabled = false;
     }
 
-    void Apply(DisabledUserAccount @event) {
+    void When(DisabledUserAccount @event) {
       _disabled = true;
       _roles.Clear();
       _roleGroups.Clear();
     }
 
-    void Apply(RoleGrantedToUserAccount @event) {
+    void When(RoleGrantedToUserAccount @event) {
       _roles.Add(new RoleId(@event.RoleId));
     }
 
-    void Apply(RoleRevokedFromUserAccount @event) {
+    void When(RoleRevokedFromUserAccount @event) {
       _roles.Remove(new RoleId(@event.RoleId));
     }
 
-    void Apply(RoleGroupGrantedToUserAccount @event) {
+    void When(RoleGroupGrantedToUserAccount @event) {
       _roleGroups.Add(new RoleGroupId(@event.RoleGroupId));
     }
 
-    void Apply(RoleGroupRevokedFromUserAccount @event) {
+    void When(RoleGroupRevokedFromUserAccount @event) {
       _roleGroups.Remove(new RoleGroupId(@event.RoleGroupId));
     }
   }

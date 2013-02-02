@@ -1,8 +1,7 @@
 using System;
-using Seabites.Naughty.Infrastructure;
 
 namespace Seabites.Naughty.Security {
-  public struct RoleId : IEquatable<RoleId>, IAggregateIdentity {
+  public struct RoleId : IEquatable<RoleId> {
     readonly Guid _value;
 
     public RoleId(Guid value) {
@@ -36,10 +35,6 @@ namespace Seabites.Naughty.Security {
 
     public override string ToString() {
       return String.Format("Role/{0}", _value.ToString().ToUpperInvariant());
-    }
-
-    Guid IAggregateIdentity.Value {
-      get { return _value; }
     }
   }
 }
